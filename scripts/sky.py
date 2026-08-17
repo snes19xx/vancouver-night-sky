@@ -4,6 +4,7 @@ import rasterio
 from rasterio.windows import from_bounds
 
 import config
+from visibility import luminance_to_mag, mag_to_bortle, mag_to_nelm
 
 
 def unpack():
@@ -61,12 +62,17 @@ def check_units():
 
 
 def probe():
-    """Print the raw cropped value and its ratio to natural at each checkpoint."""
+    """Print luminance, sky brightness, Bortle and limiting magnitude at each checkpoint."""
     with rasterio.open(config.FALCHI_CROP) as src:
         print(f"{src.width}x{src.height} {src.dtypes[0]} {src.crs}")
         for name, (lon, lat) in config.CHECKPOINTS.items():
-            v = float(next(src.sample([(lon, lat)]))[0])
-            print(f"  {name:22s} L={v:9.3f} mcd/m2  {v / config.NATURAL_MCD:7.1f}x natural")
+            L = float(next(src.sample([(lon, lat)]))[0])
+            S = float(luminance_to_mag(L))
+            k, label = mag_to_bortle(S)
+            print(
+                f"  {name:22s} L={L:8.3f} mcd/m2  S={S:5.2f}  "
+                f"bortle {k}  nelm {float(mag_to_nelm(S)):4.2f}  {label}"
+            )
 
 
 if __name__ == "__main__":
