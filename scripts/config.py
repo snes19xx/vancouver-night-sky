@@ -70,11 +70,41 @@ ROAD_TIERS = {
 ROAD_SIMPLIFY_M = 40
 ROAD_DECIMALS = 4
 ROAD_BUDGET_MB = 3.0
+ASSETS_BUDGET_MB = 6.0
 
 VANCOUVER = (-123.1207, 49.2827)
 
 SPOT_COUNT = 30
 SPOT_MIN_SEP_M = 5_000
+
+# A spot is the darkest land cell this far from its named anchor.
+SPOT_ANCHOR_RADIUS_M = 17_000
+
+DEM_COLLECTION = "COPERNICUS/DEM/GLO30_2024_1"
+
+# Named areas a spot is picked in, one spot each.
+SPOT_REGIONS = [
+    ("Sunshine Coast", -123.90, 49.62),
+    ("Tetrahedron Plateau", -123.58, 49.68),
+    ("Jervis Inlet", -124.02, 49.92),
+    ("Powell River hinterland", -124.32, 49.98),
+    ("Howe Sound west", -123.35, 49.55),
+    ("Squamish backcountry", -123.22, 49.88),
+    ("Callaghan Valley", -123.12, 50.14),
+    ("Pemberton Valley", -122.78, 50.30),
+    ("Upper Pitt River", -122.62, 49.60),
+    ("Indian Arm head", -122.88, 49.50),
+    ("Golden Ears", -122.48, 49.46),
+    ("Stave Lake north", -122.34, 49.56),
+    ("Chehalis Lake", -121.96, 49.62),
+    ("Harrison East", -121.72, 49.60),
+    ("Fraser Canyon", -121.48, 49.88),
+    ("Anderson River", -121.36, 49.74),
+    ("Coquihalla summit", -121.14, 49.58),
+    ("Manning Park approach", -121.22, 49.16),
+    ("Chilliwack River valley", -121.58, 49.04),
+    ("Mount Baker foothills", -121.88, 48.94),
+]
 
 # Cypress is dark on the ground, bright in the sky. If it reads as
 # a dark site, something has regressed to ground-radiance logic.
