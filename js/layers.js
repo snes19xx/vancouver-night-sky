@@ -83,13 +83,17 @@ export async function load(base = "assets") {
     readPng(`${base}/${layers.sky.file}`, layers.sky.nx, layers.sky.ny),
     readPng(`${base}/${layers.glow.file}`, layers.glow.nx, layers.glow.ny),
   ]);
-  const [roads, spots, basemap] = await Promise.all([
+  const [roads, spots, basemap, skyBuf, objects] = await Promise.all([
     (await fetch(`${base}/roads.json`)).json(),
     (await fetch(`${base}/spots.json`)).json(),
     (await fetch(`${base}/basemap.json`)).json(),
+    (await fetch(`${base}/sky.bin`)).arrayBuffer(),
+    (await fetch(`${base}/objects.json`)).json(),
   ]);
   return {
     sky,
+    skyBin: new Uint16Array(skyBuf),
+    objects,
     roads,
     spots,
     basemap,

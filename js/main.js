@@ -1,4 +1,5 @@
 import { load, repaint } from "./layers.js";
+import { init as initPanel, probe } from "./panel.js";
 import { Scene } from "./scene.js";
 import { onTheme, restore, setTheme, theme } from "./theme.js";
 
@@ -6,7 +7,7 @@ const $ = (id) => document.getElementById(id);
 
 const data = await load();
 const scene = new Scene($("map"), data);
-window.vns = { scene, data };
+window.vns = { scene, data, probe };
 
 function redraw() {
   repaint(data.rasters);
@@ -41,6 +42,7 @@ onTheme((name) => {
   redraw();
 });
 
+initPanel(scene, data);
 addEventListener("resize", () => scene.resize());
 restore();
 scene.resize();
