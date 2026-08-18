@@ -55,7 +55,10 @@ SPOT_MIN_SEP_M = 5_000
 # Cypress is dark on the ground, bright in the sky. If it reads as
 # a dark site, something has regressed to ground-radiance logic.
 CHECKPOINTS = {
-    "downtown_vancouver": (-123.1207, 49.2827),
-    "cypress_lookout": (-123.2058, 49.3706),
-    "callaghan_valley": (-123.1200, 50.1400),
+    "downtown_vancouver": (-123.1207, 49.2827, 8, 9),
+    "cypress_lookout": (-123.2058, 49.3706, 5, 6),
+    "callaghan_valley": (-123.1200, 50.1400, 2, 3),
 }
+
+# Open water in the Strait of Georgia, must read as ocean after masking.
+OCEAN_CHECK = (-123.5500, 49.3000)

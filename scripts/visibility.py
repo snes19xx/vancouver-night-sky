@@ -37,7 +37,7 @@ def visible_objects(S, objects):
 
 
 def check():
-    """Assert the anchor and curve values every downstream number hangs off."""
+    """Assert the anchor and curve values."""
     dark = float(luminance_to_mag(0.0))
     assert round(dark, 2) == 22.00, f"no artificial light gave S={dark}"
     assert mag_to_bortle(dark)[0] == 1, f"S={dark} is not Bortle 1"
