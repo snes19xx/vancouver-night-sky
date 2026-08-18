@@ -9,6 +9,7 @@ FALCHI_CROP = DATA_RAW / "falchi_bbox.tif"
 GEOFABRIK_ZIP = DATA_RAW / "british-columbia-latest-free.shp.zip"
 ROADS_SHP = DATA_RAW / "gis_osm_roads_free_1.shp"
 LAND_SHP = DATA_RAW / "ne_10m_land/ne_10m_land.shp"
+VIIRS_TIF = DATA_RAW / "viirs_frame.tif"
 
 ASSETS = ROOT / "assets"
 
@@ -23,6 +24,18 @@ ALBERS_X0, ALBERS_Y0 = 1_000_000.0, 0.0
 
 SKY_CELL_M = 1_000
 GLOW_CELL_M = 500
+
+# VIIRS DNB annual composite, texture only, never a statistic.
+VIIRS_COLLECTION = "NOAA/VIIRS/DNB/ANNUAL_V21"
+VIIRS_BAND = "average_masked"
+VIIRS_YEAR = 2021
+
+# nW/cm^2/sr floor, below this is sensor noise not light.
+GLOW_FLOOR = 0.25
+GLOW_GAMMA = 1.6
+
+# Percentile of lit cells that saturates the texture; the max is one flare-bright pixel.
+GLOW_CLIP_PCT = 99.5
 
 # Lon/lat window to crop Falchi to
 CROP_W, CROP_S, CROP_E, CROP_N = -124.70, 48.68, -120.76, 50.61

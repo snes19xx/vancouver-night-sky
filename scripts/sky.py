@@ -132,9 +132,11 @@ def build():
         "bortle": [[None if f < -1e3 else f, k, lab] for f, k, lab in config.BORTLE_BINS],
     })
     rasterout.update_meta("sky", {
-        "file": "sky.png", "nx": nx, "ny": ny, "cell_m": cell,
-        "vmin": config.SKY_S_MIN, "vmax": config.SKY_S_MAX,
-        "unit": "mag/arcsec2",
+        "file": "sky.png", "kind": "sequential", "encode": "linear",
+        "vmin": config.SKY_S_MIN, "vmax": config.SKY_S_MAX, "unit": "mag/arcsec2",
+        "cell_m": cell, "nx": nx, "ny": ny,
+        "legend": ["inner city", "sky brightness", "pristine"],
+        "note": "Falchi 2015 artificial luminance plus 0.174 mcd/m2 natural background",
     })
     return S
 
