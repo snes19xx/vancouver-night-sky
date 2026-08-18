@@ -6,8 +6,8 @@ DATA_RAW = ROOT / "data_raw"
 FALCHI_ZIP = DATA_RAW / "World_Atlas_2015.zip"
 FALCHI_TIF = DATA_RAW / "World_Atlas_2015.tif"
 FALCHI_CROP = DATA_RAW / "falchi_bbox.tif"
-GEOFABRIK_ZIP = DATA_RAW / "british-columbia-latest-free.shp.zip"
-ROADS_SHP = DATA_RAW / "gis_osm_roads_free_1.shp"
+GEOFABRIK_ZIP = DATA_RAW / "british-columbia-260101-free.shp.zip"
+ROADS_SHP = DATA_RAW / "bc_osm/gis_osm_roads_free_1.shp"
 LAND_SHP = DATA_RAW / "ne_10m_land/ne_10m_land.shp"
 VIIRS_TIF = DATA_RAW / "viirs_frame.tif"
 
@@ -59,6 +59,17 @@ BORTLE_BINS = [
 
 # Fixed S range the uint8 sky texture spans. Values outside are clamped.
 SKY_S_MIN, SKY_S_MAX = 16.6, 22.0
+
+# OSM fclass -> the three tiers prototype.html draws roads in.
+ROAD_TIERS = {
+    "motorway": "major", "trunk": "major",
+    "primary": "second", "secondary": "second",
+    "tertiary": "minor", "unclassified": "minor",
+    "residential": "minor", "living_street": "minor",
+}
+ROAD_SIMPLIFY_M = 40
+ROAD_DECIMALS = 4
+ROAD_BUDGET_MB = 3.0
 
 VANCOUVER = (-123.1207, 49.2827)
 
