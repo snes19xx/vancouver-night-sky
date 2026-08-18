@@ -1,5 +1,6 @@
 import sys
 
+import basemap
 import config
 import glow
 import roads
@@ -16,6 +17,7 @@ def stage_sky():
 
 
 STAGES = {
+    "basemap": basemap.build,
     "sky": stage_sky,
     "glow": glow.build,
     "roads": roads.build,

@@ -1,6 +1,6 @@
 import zipfile
 
-import geopandas as gpd
+import config
 import numpy as np
 import rasterio
 from pyproj import Transformer
@@ -8,7 +8,7 @@ from rasterio.features import geometry_mask
 from rasterio.warp import Resampling, reproject
 from rasterio.windows import from_bounds
 
-import config
+import basemap
 import rasterout
 from visibility import luminance_to_mag, mag_to_bortle, mag_to_nelm
 
@@ -36,6 +36,8 @@ def unpack():
 
 def crop():
     """Windowed read of the global Falchi raster into a local bbox GeoTIFF."""
+    if config.FALCHI_CROP.exists():
+        return config.FALCHI_CROP
     unpack()
     with rasterio.open(config.FALCHI_TIF) as src:
         win = from_bounds(
@@ -85,16 +87,9 @@ def to_frame(cell_m):
 
 
 def land_mask(cell_m):
-    """True where a frame cell is land, from Natural Earth 10m."""
-    if not config.LAND_SHP.exists():
-        raise SystemExit(
-            f"missing {config.LAND_SHP.parent.name}; unzip ne_10m_land.zip from "
-            "https://naciscdn.org/naturalearth/10m/physical/ne_10m_land.zip into data_raw/"
-        )
-    box = (config.CROP_W, config.CROP_S, config.CROP_E, config.CROP_N)
-    land = gpd.read_file(config.LAND_SHP, bbox=box).to_crs(config.CRS)
+    """True where a frame cell is land, from the GSHHG coastline."""
     return geometry_mask(
-        land.geometry,
+        basemap.land(),
         out_shape=rasterout.grid_shape(cell_m),
         transform=rasterout.frame_transform(cell_m),
         invert=True,

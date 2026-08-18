@@ -1,1 +1,222 @@
-[{"name":"Powell River hinterland","lon":-124.3563,"lat":50.129,"s":21.98,"bortle":2,"nelm":6.62,"elev_m":110,"dist_km":130,"objects":56},{"name":"Fraser Canyon","lon":-121.5384,"lat":50.0238,"s":21.98,"bortle":2,"nelm":6.62,"elev_m":264,"dist_km":141,"objects":56},{"name":"Jervis Inlet","lon":-124.051,"lat":50.0701,"s":21.98,"bortle":2,"nelm":6.61,"elev_m":786,"dist_km":110,"objects":56},{"name":"Pemberton Valley","lon":-122.8367,"lat":50.4467,"s":21.98,"bortle":2,"nelm":6.61,"elev_m":1680,"dist_km":131,"objects":56},{"name":"Anderson River","lon":-121.2332,"lat":49.8668,"s":21.97,"bortle":2,"nelm":6.61,"elev_m":1277,"dist_km":151,"objects":56},{"name":"Callaghan Valley","lon":-123.2423,"lat":50.2687,"s":21.97,"bortle":2,"nelm":6.61,"elev_m":1958,"dist_km":110,"objects":56},{"name":"Manning Park approach","lon":-120.9898,"lat":49.1614,"s":21.97,"bortle":2,"nelm":6.61,"elev_m":1645,"dist_km":156,"objects":56},{"name":"Coquihalla summit","lon":-120.9695,"lat":49.4762,"s":21.96,"bortle":2,"nelm":6.61,"elev_m":1023,"dist_km":158,"objects":56},{"name":"Harrison East","lon":-121.5949,"lat":49.7287,"s":21.96,"bortle":2,"nelm":6.61,"elev_m":863,"dist_km":121,"objects":56},{"name":"Chehalis Lake","lon":-121.8563,"lat":49.757,"s":21.95,"bortle":2,"nelm":6.6,"elev_m":646,"dist_km":106,"objects":56},{"name":"Squamish backcountry","lon":-123.3417,"lat":50.0102,"s":21.95,"bortle":2,"nelm":6.6,"elev_m":72,"dist_km":82,"objects":56},{"name":"Sunshine Coast","lon":-123.9249,"lat":49.7709,"s":21.94,"bortle":2,"nelm":6.6,"elev_m":218,"dist_km":80,"objects":56},{"name":"Chilliwack River valley","lon":-121.3803,"lat":48.9623,"s":21.94,"bortle":2,"nelm":6.6,"elev_m":878,"dist_km":132,"objects":56},{"name":"Tetrahedron Plateau","lon":-123.7294,"lat":49.794,"s":21.93,"bortle":2,"nelm":6.59,"elev_m":26,"dist_km":72,"objects":56},{"name":"Stave Lake north","lon":-122.1962,"lat":49.6793,"s":21.9,"bortle":2,"nelm":6.58,"elev_m":1437,"dist_km":80,"objects":56},{"name":"Mount Baker foothills","lon":-121.6601,"lat":48.8928,"s":21.88,"bortle":3,"nelm":6.57,"elev_m":657,"dist_km":115,"objects":56},{"name":"Upper Pitt River","lon":-122.4978,"lat":49.7255,"s":21.87,"bortle":3,"nelm":6.57,"elev_m":957,"dist_km":67,"objects":56},{"name":"Howe Sound west","lon":-123.4717,"lat":49.6804,"s":21.82,"bortle":3,"nelm":6.54,"elev_m":569,"dist_km":51,"objects":56},{"name":"Golden Ears","lon":-122.3293,"lat":49.5758,"s":21.82,"bortle":3,"nelm":6.54,"elev_m":941,"dist_km":66,"objects":56},{"name":"Indian Arm head","lon":-122.8088,"lat":49.645,"s":21.72,"bortle":3,"nelm":6.49,"elev_m":1520,"dist_km":46,"objects":56}]
+[
+  {
+    "name": "Powell River hinterland",
+    "lon": -124.3563,
+    "lat": 50.129,
+    "s": 21.98,
+    "bortle": 2,
+    "nelm": 6.62,
+    "elev_m": 110,
+    "dist_km": 130,
+    "objects": 56
+  },
+  {
+    "name": "Fraser Canyon",
+    "lon": -121.5384,
+    "lat": 50.0238,
+    "s": 21.98,
+    "bortle": 2,
+    "nelm": 6.62,
+    "elev_m": 264,
+    "dist_km": 141,
+    "objects": 56
+  },
+  {
+    "name": "Jervis Inlet",
+    "lon": -124.051,
+    "lat": 50.0701,
+    "s": 21.98,
+    "bortle": 2,
+    "nelm": 6.61,
+    "elev_m": 786,
+    "dist_km": 110,
+    "objects": 56
+  },
+  {
+    "name": "Pemberton Valley",
+    "lon": -122.8367,
+    "lat": 50.4467,
+    "s": 21.98,
+    "bortle": 2,
+    "nelm": 6.61,
+    "elev_m": 1680,
+    "dist_km": 131,
+    "objects": 56
+  },
+  {
+    "name": "Anderson River",
+    "lon": -121.2332,
+    "lat": 49.8668,
+    "s": 21.97,
+    "bortle": 2,
+    "nelm": 6.61,
+    "elev_m": 1277,
+    "dist_km": 151,
+    "objects": 56
+  },
+  {
+    "name": "Callaghan Valley",
+    "lon": -123.2423,
+    "lat": 50.2687,
+    "s": 21.97,
+    "bortle": 2,
+    "nelm": 6.61,
+    "elev_m": 1958,
+    "dist_km": 110,
+    "objects": 56
+  },
+  {
+    "name": "Manning Park approach",
+    "lon": -120.9898,
+    "lat": 49.1614,
+    "s": 21.97,
+    "bortle": 2,
+    "nelm": 6.61,
+    "elev_m": 1645,
+    "dist_km": 156,
+    "objects": 56
+  },
+  {
+    "name": "Coquihalla summit",
+    "lon": -120.9695,
+    "lat": 49.4762,
+    "s": 21.96,
+    "bortle": 2,
+    "nelm": 6.61,
+    "elev_m": 1023,
+    "dist_km": 158,
+    "objects": 56
+  },
+  {
+    "name": "Harrison East",
+    "lon": -121.5949,
+    "lat": 49.7287,
+    "s": 21.96,
+    "bortle": 2,
+    "nelm": 6.61,
+    "elev_m": 863,
+    "dist_km": 121,
+    "objects": 56
+  },
+  {
+    "name": "Chehalis Lake",
+    "lon": -121.8563,
+    "lat": 49.757,
+    "s": 21.95,
+    "bortle": 2,
+    "nelm": 6.6,
+    "elev_m": 646,
+    "dist_km": 106,
+    "objects": 56
+  },
+  {
+    "name": "Squamish backcountry",
+    "lon": -123.3417,
+    "lat": 50.0102,
+    "s": 21.95,
+    "bortle": 2,
+    "nelm": 6.6,
+    "elev_m": 72,
+    "dist_km": 82,
+    "objects": 56
+  },
+  {
+    "name": "Sunshine Coast",
+    "lon": -123.9808,
+    "lat": 49.763,
+    "s": 21.95,
+    "bortle": 2,
+    "nelm": 6.6,
+    "elev_m": 67,
+    "dist_km": 82,
+    "objects": 56
+  },
+  {
+    "name": "Chilliwack River valley",
+    "lon": -121.3803,
+    "lat": 48.9623,
+    "s": 21.94,
+    "bortle": 2,
+    "nelm": 6.6,
+    "elev_m": 878,
+    "dist_km": 132,
+    "objects": 56
+  },
+  {
+    "name": "Tetrahedron Plateau",
+    "lon": -123.7294,
+    "lat": 49.794,
+    "s": 21.93,
+    "bortle": 2,
+    "nelm": 6.59,
+    "elev_m": 26,
+    "dist_km": 72,
+    "objects": 56
+  },
+  {
+    "name": "Stave Lake north",
+    "lon": -122.1962,
+    "lat": 49.6793,
+    "s": 21.9,
+    "bortle": 2,
+    "nelm": 6.58,
+    "elev_m": 1437,
+    "dist_km": 80,
+    "objects": 56
+  },
+  {
+    "name": "Mount Baker foothills",
+    "lon": -121.6601,
+    "lat": 48.8928,
+    "s": 21.88,
+    "bortle": 3,
+    "nelm": 6.57,
+    "elev_m": 657,
+    "dist_km": 115,
+    "objects": 56
+  },
+  {
+    "name": "Upper Pitt River",
+    "lon": -122.4978,
+    "lat": 49.7255,
+    "s": 21.87,
+    "bortle": 3,
+    "nelm": 6.57,
+    "elev_m": 957,
+    "dist_km": 67,
+    "objects": 56
+  },
+  {
+    "name": "Howe Sound west",
+    "lon": -123.4717,
+    "lat": 49.6804,
+    "s": 21.82,
+    "bortle": 3,
+    "nelm": 6.54,
+    "elev_m": 569,
+    "dist_km": 51,
+    "objects": 56
+  },
+  {
+    "name": "Golden Ears",
+    "lon": -122.3293,
+    "lat": 49.5758,
+    "s": 21.82,
+    "bortle": 3,
+    "nelm": 6.54,
+    "elev_m": 941,
+    "dist_km": 66,
+    "objects": 56
+  },
+  {
+    "name": "Indian Arm head",
+    "lon": -122.8088,
+    "lat": 49.645,
+    "s": 21.72,
+    "bortle": 3,
+    "nelm": 6.49,
+    "elev_m": 1520,
+    "dist_km": 46,
+    "objects": 56
+  }
+]

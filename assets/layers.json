@@ -1,1 +1,29 @@
-{"sky":{"file":"sky.png","kind":"sequential","encode":"linear","vmin":16.6,"vmax":22.0,"unit":"mag/arcsec2","cell_m":1000,"nx":269,"ny":191,"legend":["inner city","sky brightness","pristine"],"note":"Falchi 2015 artificial luminance plus 0.174 mcd/m2 natural background"},"glow":{"file":"glow.png","kind":"sequential","encode":"log1p","vmin_log":0.2231,"vmax_log":4.5025,"gamma":1.6,"cell_m":500,"nx":538,"ny":382,"legend":["dark","upward radiance","bright"],"year":2021,"note":"VIIRS DNB 2021 annual average_masked, texture only and never a statistic"}}
+{
+  "sky": {
+    "file": "sky.png",
+    "kind": "sequential",
+    "encode": "linear",
+    "vmin": 16.6,
+    "vmax": 22.0,
+    "unit": "mag/arcsec2",
+    "cell_m": 1000,
+    "nx": 269,
+    "ny": 191,
+    "legend": ["inner city", "sky brightness", "pristine"],
+    "note": "Falchi 2015 artificial luminance plus 0.174 mcd/m2 natural background"
+  },
+  "glow": {
+    "file": "glow.png",
+    "kind": "sequential",
+    "encode": "log1p",
+    "vmin_log": 0.2231,
+    "vmax_log": 4.5025,
+    "gamma": 1.6,
+    "cell_m": 500,
+    "nx": 538,
+    "ny": 382,
+    "legend": ["dark", "upward radiance", "bright"],
+    "year": 2021,
+    "note": "VIIRS DNB 2021 annual average_masked, texture only and never a statistic"
+  }
+}

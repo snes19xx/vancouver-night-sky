@@ -1,26 +1,25 @@
 import json
 import zipfile
 
+import config
 import geopandas as gpd
 from shapely.ops import linemerge
 
-import config
 
-
-def unpack():
-    """Extract the roads shapefile from the Geofabrik zip if it isn't already there."""
-    if config.ROADS_SHP.exists():
-        return config.ROADS_SHP
+def unpack(shp=None):
+    """Extract one Geofabrik shapefile from the zip if it isn't already there."""
+    shp = shp or config.ROADS_SHP
+    if shp.exists():
+        return shp
     if not config.GEOFABRIK_ZIP.exists():
         raise SystemExit(
             f"missing {config.GEOFABRIK_ZIP.name}; download it from "
             "https://download.geofabrik.de/north-america/canada/"
         )
-    stem = config.ROADS_SHP.stem
     with zipfile.ZipFile(config.GEOFABRIK_ZIP) as z:
-        names = [n for n in z.namelist() if n.rsplit("/", 1)[-1].startswith(stem + ".")]
-        z.extractall(config.ROADS_SHP.parent, members=names)
-    return config.ROADS_SHP
+        names = [n for n in z.namelist() if n.rsplit("/", 1)[-1].startswith(shp.stem + ".")]
+        z.extractall(shp.parent, members=names)
+    return shp
 
 
 def load():

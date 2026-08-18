@@ -63,8 +63,7 @@ def build():
         "nx": nx, "ny": ny,
         "legend": ["dark", "upward radiance", "bright"],
         "year": config.VIIRS_YEAR,
-        "note": f"VIIRS DNB {config.VIIRS_YEAR} annual {config.VIIRS_BAND}, "
-                "texture only and never a statistic",
+        "note": f"VIIRS DNB {config.VIIRS_YEAR} annual {config.VIIRS_BAND}",
     })
     return px
 

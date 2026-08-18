@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import rasterio  # noqa: F401
+
 ROOT = Path(__file__).resolve().parents[1]
 
 DATA_RAW = ROOT / "data_raw"
@@ -8,7 +10,14 @@ FALCHI_TIF = DATA_RAW / "World_Atlas_2015.tif"
 FALCHI_CROP = DATA_RAW / "falchi_bbox.tif"
 GEOFABRIK_ZIP = DATA_RAW / "british-columbia-260101-free.shp.zip"
 ROADS_SHP = DATA_RAW / "bc_osm/gis_osm_roads_free_1.shp"
-LAND_SHP = DATA_RAW / "ne_10m_land/ne_10m_land.shp"
+WATERWAYS_SHP = DATA_RAW / "bc_osm/gis_osm_waterways_free_1.shp"
+GSHHG_ZIP = DATA_RAW / "gshhg-shp-2.3.7.zip"
+GSHHG_DIR = DATA_RAW / "gshhg"
+COAST_SHP = GSHHG_DIR / "GSHHS_shp/f/GSHHS_f_L1.shp"
+LAKES_SHP = GSHHG_DIR / "GSHHS_shp/f/GSHHS_f_L2.shp"
+ISLET_SHP = GSHHG_DIR / "GSHHS_shp/f/GSHHS_f_L3.shp"
+BORDER_SHP = GSHHG_DIR / "WDBII_shp/f/WDBII_border_f_L1.shp"
+RIVER_SHPS = [GSHHG_DIR / f"WDBII_shp/f/WDBII_river_f_L0{k}.shp" for k in range(1, 6)]
 VIIRS_TIF = DATA_RAW / "viirs_frame.tif"
 
 ASSETS = ROOT / "assets"
@@ -25,16 +34,16 @@ ALBERS_X0, ALBERS_Y0 = 1_000_000.0, 0.0
 SKY_CELL_M = 1_000
 GLOW_CELL_M = 500
 
-# VIIRS DNB annual composite, texture only, never a statistic.
+# VIIRS DNB annual composite texture only
 VIIRS_COLLECTION = "NOAA/VIIRS/DNB/ANNUAL_V21"
 VIIRS_BAND = "average_masked"
 VIIRS_YEAR = 2021
 
-# nW/cm^2/sr floor, below this is sensor noise not light.
+# nW/cm^2/sr floor, below this is sensor noise.
 GLOW_FLOOR = 0.25
 GLOW_GAMMA = 1.6
 
-# Percentile of lit cells that saturates the texture; the max is one flare-bright pixel.
+# Percentile of lit cells that saturates the texture.
 GLOW_CLIP_PCT = 99.5
 
 # Lon/lat window to crop Falchi to
@@ -74,6 +83,29 @@ ASSETS_BUDGET_MB = 6.0
 
 VANCOUVER = (-123.1207, 49.2827)
 
+# Places labelled on the map.
+PLACES = [
+    ("Vancouver", -123.12, 49.28),
+    ("Abbotsford", -122.33, 49.05),
+    ("Chilliwack", -121.95, 49.16),
+    ("Squamish", -123.16, 49.70),
+    ("Whistler", -122.95, 50.11),
+    ("Sechelt", -123.76, 49.47),
+    ("Hope", -121.44, 49.38),
+    ("Nanaimo", -123.94, 49.16),
+    ("Bellingham", -122.49, 48.75),
+]
+
+# Drop coast islands and lakes smaller than this.
+COAST_MIN_KM2 = 0.5
+LAKE_MIN_KM2 = 1.0
+COAST_SIMPLIFY_M = 60
+
+# Named rivers and canals only, and only runs this long once merged.
+RIVER_CLASSES = ("river", "canal")
+RIVER_MIN_M = 2_000
+RIVER_SIMPLIFY_M = 150
+
 SPOT_COUNT = 30
 SPOT_MIN_SEP_M = 5_000
 
@@ -106,13 +138,12 @@ SPOT_REGIONS = [
     ("Mount Baker foothills", -121.88, 48.94),
 ]
 
-# Cypress is dark on the ground, bright in the sky. If it reads as
-# a dark site, something has regressed to ground-radiance logic.
+# Cypress is dark on the ground, bright in the sky.
 CHECKPOINTS = {
     "downtown_vancouver": (-123.1207, 49.2827, 8, 9),
     "cypress_lookout": (-123.2058, 49.3706, 5, 6),
     "callaghan_valley": (-123.1200, 50.1400, 2, 3),
 }
 
-# Open water in the Strait of Georgia, must read as ocean after masking.
+# Open water in the Strait of Georgia.
 OCEAN_CHECK = (-123.5500, 49.3000)
