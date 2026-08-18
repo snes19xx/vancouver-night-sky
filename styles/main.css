@@ -135,6 +135,7 @@ body {
 #map {
   display: block;
   cursor: crosshair;
+  touch-action: none;
 }
 
 /* One screen per panel page, snap to flip. */

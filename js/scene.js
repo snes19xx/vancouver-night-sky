@@ -124,11 +124,48 @@ export class Scene {
       data.sky.bortle.map((b) => b[0]),
     );
 
+    const buildPath = (lists, close) => {
+      const p = new Path2D();
+      for (const pts of lists) {
+        p.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 1; i < pts.length; i++) p.lineTo(pts[i][0], pts[i][1]);
+        if (close) p.closePath();
+      }
+      return p;
+    };
+    this.landPath = buildPath(this.land, true);
+    this.lakePath = buildPath(this.lakes, true);
+    this.riverPath = buildPath(this.rivers, false);
+    this.borderPath = buildPath(this.border, false);
+    this.contourPaths = this.contours.map((seg) => {
+      const p = new Path2D();
+      for (let n = 0; n < seg.length; n += 4) {
+        p.moveTo(seg[n], seg[n + 1]);
+        p.lineTo(seg[n + 2], seg[n + 3]);
+      }
+      return p;
+    });
+    this.roadPaths = {};
+    for (const [tier, lines] of Object.entries(this.roads)) {
+      const p = new Path2D();
+      for (const line of lines) {
+        p.moveTo(line[0], line[1]);
+        for (let i = 2; i < line.length; i += 2) p.lineTo(line[i], line[i + 1]);
+      }
+      this.roadPaths[tier] = p;
+    }
+
+    this._raf = 0;
     this.zoom = zoom()
       .scaleExtent([1, 60])
       .on("zoom", (ev) => {
         this.t = ev.transform;
-        this.draw();
+        if (!this._raf) {
+          this._raf = requestAnimationFrame(() => {
+            this._raf = 0;
+            this.draw();
+          });
+        }
       });
     select(canvas).call(this.zoom);
   }
@@ -246,12 +283,10 @@ export class Scene {
     const WATER = css("--water");
     cx.fillStyle = WATER;
     cx.fillRect(0, 0, this.frame.width, this.frame.height);
-    this.trace(this.land, true);
     cx.fillStyle = PAPER;
-    cx.fill("evenodd");
-    this.trace(this.lakes, true);
+    cx.fill(this.landPath, "evenodd");
     cx.fillStyle = WATER;
-    cx.fill("evenodd");
+    cx.fill(this.lakePath, "evenodd");
 
     cx.imageSmoothingEnabled = true;
     cx.imageSmoothingQuality = "high";
@@ -266,41 +301,32 @@ export class Scene {
     cx.strokeStyle = INK;
     cx.globalAlpha = dark ? 0.5 : 0.75;
     cx.lineWidth = 0.8 / k;
-    this.trace(this.land, true);
-    cx.stroke();
+    cx.stroke(this.landPath);
     cx.lineWidth = 0.6 / k;
-    this.trace(this.lakes, true);
-    cx.stroke();
+    cx.stroke(this.lakePath);
 
     cx.strokeStyle = INK2;
     cx.globalAlpha = dark ? 0.45 : 0.55;
     cx.lineWidth = 0.6 / k;
-    this.trace(this.rivers, false);
-    cx.stroke();
+    cx.stroke(this.riverPath);
 
     cx.strokeStyle = INK3;
     cx.globalAlpha = 0.7;
     cx.lineWidth = 0.7 / k;
     cx.setLineDash([4 / k, 3 / k]);
-    this.trace(this.border, false);
-    cx.stroke();
+    cx.stroke(this.borderPath);
     cx.setLineDash([]);
     cx.globalAlpha = 1;
 
     if (this.show.cont) {
       cx.lineJoin = "round";
       cx.lineCap = "round";
-      this.contours.forEach((seg, i) => {
+      this.contourPaths.forEach((path, i) => {
         const hot = i >= 3;
         cx.strokeStyle = hot ? AC : INK2;
         cx.globalAlpha = hot ? (dark ? 0.42 : 0.5) : dark ? 0.3 : 0.38;
         cx.lineWidth = (hot ? 0.55 : 0.45) / k;
-        cx.beginPath();
-        for (let n = 0; n < seg.length; n += 4) {
-          cx.moveTo(seg[n], seg[n + 1]);
-          cx.lineTo(seg[n + 2], seg[n + 3]);
-        }
-        cx.stroke();
+        cx.stroke(path);
       });
       cx.globalAlpha = 1;
     }
@@ -313,13 +339,7 @@ export class Scene {
         cx.strokeStyle = rgb(ramp(t));
         cx.globalAlpha = alpha;
         cx.lineWidth = width / k;
-        cx.beginPath();
-        for (const line of this.roads[tier]) {
-          cx.moveTo(line[0], line[1]);
-          for (let i = 2; i < line.length; i += 2)
-            cx.lineTo(line[i], line[i + 1]);
-        }
-        cx.stroke();
+        cx.stroke(this.roadPaths[tier]);
       }
       cx.globalAlpha = 1;
     }
@@ -328,12 +348,14 @@ export class Scene {
       cx.strokeStyle = AC;
       cx.globalAlpha = dark ? 0.22 : 0.34;
       cx.lineWidth = 0.5 / k;
-      cx.beginPath();
-      for (const g of this.graticule()) {
-        cx.moveTo(g.pts[0][0], g.pts[0][1]);
-        for (const p of g.pts.slice(1)) cx.lineTo(p[0], p[1]);
+      if (!this._gratPath) {
+        this._gratPath = new Path2D();
+        for (const g of this.graticule()) {
+          this._gratPath.moveTo(g.pts[0][0], g.pts[0][1]);
+          for (const p of g.pts.slice(1)) this._gratPath.lineTo(p[0], p[1]);
+        }
       }
-      cx.stroke();
+      cx.stroke(this._gratPath);
       cx.globalAlpha = 1;
     }
 
