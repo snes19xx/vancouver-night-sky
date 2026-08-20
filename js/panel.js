@@ -1,10 +1,11 @@
 import { project } from "./albers.js";
+import { drawPatch, ladder, scaleChart } from "./charts.js";
 import { ramp } from "./layers.js";
 import { onTheme } from "./theme.js";
 
 const VAN = [-123.1207, 49.2827];
 const $ = (id) => document.getElementById(id);
-const PAGES = ["Site"];
+const PAGES = ["Site", "Sky", "Objects"];
 const rgb = (c) => `rgb(${c[0] | 0} ${c[1] | 0} ${c[2] | 0})`;
 const tOf = (S) => Math.max(0, Math.min(1, (22.0 - S) / (22.0 - 16.6)));
 const countOf = (N) => Math.round(7.5 * Math.pow(3.1, N - 1));
@@ -21,7 +22,11 @@ const BANDS = [
   [17.8, 16.4, 9],
 ];
 
-let scene, data, page = 0, vanS, last = null;
+let scene,
+  data,
+  page = 0,
+  vanS,
+  last = null;
 
 export function skyAt(lon, lat) {
   const [x, y] = project(lon, lat);
@@ -42,7 +47,7 @@ export function nelmOf(S) {
 }
 
 function ratioOf(S) {
-  return data.sky.l0_mcd * Math.pow(10, -S / 2.5) / data.sky.natural_mcd - 1;
+  return (data.sky.l0_mcd * Math.pow(10, -S / 2.5)) / data.sky.natural_mcd - 1;
 }
 
 function countVisible(S) {
@@ -71,8 +76,12 @@ export function probe(lon, lat) {
 function physChart(S, N, ratio, availH, availW) {
   const w = Math.max(280, Math.min(360, availW || 318));
   const h = Math.max(190, Math.min(560, availH || 300));
-  const PT = 20, PB = 30, PL = 28, PR = 26;
-  const IW = w - PL - PR, IH = h - PT - PB;
+  const PT = 20,
+    PB = 30,
+    PL = 28,
+    PR = 26;
+  const IW = w - PL - PR,
+    IH = h - PT - PB;
   const x = (v) => PL + ((22.25 - v) / (22.25 - 16.4)) * IW;
   const maxC = countOf(nelmOf(22.25));
   const yC = (c) => PT + (1 - c / maxC) * IH;
@@ -83,7 +92,8 @@ function physChart(S, N, ratio, availH, availW) {
 
   for (const [a, b, k] of BANDS) {
     const c = rgb(ramp(tOf((a + b) / 2)));
-    const X = x(a), W = x(b) - x(a);
+    const X = x(a),
+      W = x(b) - x(a);
     o += `<rect x="${X}" y="${PT}" width="${W}" height="${IH}" fill="${c}" opacity="0.14"/>`;
     if (k === cls)
       o += `<rect x="${X}" y="${PT}" width="${W}" height="${IH}" fill="var(--accent)" opacity="0.12"/>`;
@@ -91,7 +101,8 @@ function physChart(S, N, ratio, availH, availW) {
       o += `<text class="t" x="${X + W / 2}" y="${PT - 5}" text-anchor="middle" fill="${k === cls ? "var(--accent)" : "var(--ink3)"}">${k}</text>`;
   }
 
-  const P = [], Q = [];
+  const P = [],
+    Q = [];
   for (let k = 0; k <= 90; k++) {
     const v = 22.25 - (k / 90) * (22.25 - 16.4);
     P.push([x(v), yC(countOf(nelmOf(v)))]);
@@ -112,12 +123,15 @@ function physChart(S, N, ratio, availH, availW) {
     o += `<text class="t" x="${x(v)}" y="${PT + IH + 12}" text-anchor="middle">${lb}</text>`;
   }
 
-  const mx = x(S), mc = yC(countOf(N)), mn = yN(N);
+  const mx = x(S),
+    mc = yC(countOf(N)),
+    mn = yN(N);
   o += `<line x1="${mx}" y1="${PT}" x2="${mx}" y2="${PT + IH}" stroke="var(--accent)" stroke-width="1.1"/>`;
   o += `<circle cx="${mx}" cy="${mc}" r="4" fill="var(--ok)" stroke="var(--paper)" stroke-width="1"/>`;
   o += `<circle cx="${mx}" cy="${mn}" r="3" fill="var(--ink)" stroke="var(--paper)" stroke-width="1"/>`;
 
-  const RW = 140, RH = 58;
+  const RW = 140,
+    RH = 58;
   const rx = mx > w * 0.55 ? PL + 10 : PL + IW - RW - 10;
   const ry = PT + 10;
   const key = [
@@ -160,6 +174,28 @@ function fit() {
       ph.clientHeight,
       ph.clientWidth,
     );
+  const duo = document.querySelector(".duo");
+  if (duo) {
+    const gap = 14,
+      lab = 22;
+    let side = Math.min(
+      duo.clientWidth,
+      Math.floor((duo.clientHeight - gap - 2 * lab) / 2),
+    );
+    side = Math.max(70, side);
+    for (const id of ["pHere", "pPure"]) {
+      const c = $(id);
+      if (!c) continue;
+      c.style.width = side + "px";
+      c.style.height = side + "px";
+      c.parentElement.style.width = side + "px";
+    }
+  }
+  drawPatch($("pHere"), last.N);
+  drawPatch($("pPure"), last.pure);
+  const host = $("ladderHost");
+  if (host)
+    host.innerHTML = ladder(last.N, last.S, data.objects, host.clientHeight);
 }
 
 function close() {
@@ -169,7 +205,9 @@ function close() {
 }
 
 function render() {
-  const panel = $("panel"), wrap = $("wrap"), pages = $("pages");
+  const panel = $("panel"),
+    wrap = $("wrap"),
+    pages = $("pages");
   if (!scene.sel) {
     panel.hidden = true;
     pages.innerHTML = "";
@@ -190,8 +228,10 @@ function render() {
   const r = ratioOf(S);
   const dist = distKm(lon, lat);
 
-  const tile = (v, k) =>
-    `<div class="tile"><b>${v}</b><span>${k}</span></div>`;
+  const tile = (v, k) => `<div class="tile"><b>${v}</b><span>${k}</span></div>`;
+
+  const pure = nelmOf(22.0);
+  const vis = countVisible(S);
 
   pages.innerHTML = `
   <section class="pg">
@@ -211,14 +251,44 @@ function render() {
         ${tile(`${Math.round(dist)}<u>km</u>`, "from vancouver")}
       </div>
     </div>
+  </section>
+
+  <section class="pg">
+    <div class="hd">
+      <b>Simulated sky</b>
+      <button class="x" id="close-sky" aria-label="Close">×</button>
+    </div>
+    <div class="grow">
+      <div class="duo">
+        <div class="pw"><canvas class="patch" id="pHere"></canvas>
+          <div class="pl"><b>Here</b><span>${countOf(N).toLocaleString()}</span></div></div>
+        <div class="pw"><canvas class="patch" id="pPure"></canvas>
+          <div class="pl"><b>Pristine</b><span>${countOf(pure).toLocaleString()}</span></div></div>
+      </div>
+      ${scaleChart(S)}
+    </div>
+  </section>
+
+  <section class="pg">
+    <div class="hd">
+      <b>What survives</b>
+      <span>${vis.stars}/${data.objects.stars.length} stars · ${vis.ext}/${data.objects.extended.length} deep-sky</span>
+      <button class="x" id="close-obj" aria-label="Close">×</button>
+    </div>
+    <div class="grow">
+      <div id="ladderHost" style="flex:1 1 auto;min-height:0;padding-top:.35rem"></div>
+      <div class="legend"><s>visible</s><s class="o">invisible</s><s class="h">deep-sky</s></div>
+    </div>
   </section>`;
 
-  last = { S, N, ratio: r };
+  last = { S, N, ratio: r, pure };
   panel.hidden = false;
   wrap.classList.add("split");
   page = 0;
   syncPager();
   $("close-panel").onclick = close;
+  $("close-sky").onclick = close;
+  $("close-obj").onclick = close;
   scene.resize();
   requestAnimationFrame(fit);
 }
