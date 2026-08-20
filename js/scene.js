@@ -8,7 +8,7 @@ const PADL = 34,
   PADT = 16,
   PADR = 12,
   PADB = 26;
-const SANS = (s) => `${s}px "IBM Plex Sans",Helvetica,sans-serif`;
+const SANS = (s) => `${s}px "Public Sans",Helvetica,sans-serif`;
 
 // Tier, position on the sky ramp, alpha, screen width, and the zoom it starts at.
 const TIERS = [

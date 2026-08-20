@@ -242,9 +242,9 @@ function render() {
     <div class="grow">
       <div id="physHost" style="flex:1 1 auto;min-height:0"></div>
       <div class="note" style="padding:.4rem 0 0;line-height:1.45">
-        <p style="margin:0 0 .15rem">mag ${N.toFixed(1)} — faintest star your eye can see here</p>
-        <p style="margin:0 0 .15rem">sky is ${(1 + r).toFixed(1)}× the natural brightness</p>
-        <p style="margin:0">red band — the Bortle ${cls} range this site falls in</p>
+        <p style="margin:0 0 .15rem"><b>mag ${N.toFixed(1)}</b> — faintest star your eye can see here</p>
+        <p style="margin:0 0 .15rem">sky is <b>${(1 + r).toFixed(1)}×</b> the natural brightness</p>
+        <p style="margin:0">red band — the Bortle <b>${cls}</b> range this site falls in</p>
       </div>
       <div class="sfoot">
         ${tile(cls, `bortle · ${label}`)}

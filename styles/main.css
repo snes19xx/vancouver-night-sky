@@ -9,8 +9,9 @@
   --rule2: #171a1e;
   --accent: #d8442f;
   --ok: #729e5a;
-  --serif: "Newsreader", Georgia, "Times New Roman", serif;
-  --sans: "IBM Plex Sans", -apple-system, Helvetica, Arial, sans-serif;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "Public Sans", -apple-system, Helvetica, Arial, sans-serif;
+  --mono: "Spline Sans Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 :root[data-theme="light"] {
   --paper: #f5f3ee;
@@ -61,7 +62,7 @@ body {
   flex: 0 0 auto;
 
   h1 {
-    font-family: var(--serif);
+    font-family: var(--display);
     font-weight: 400;
     font-size: 1.5rem;
     letter-spacing: -0.005em;
@@ -69,10 +70,45 @@ body {
   }
   .sub {
     color: var(--ink2);
-    font-size: 0.74rem;
-    max-width: 56ch;
-    margin-top: 0.25rem;
-    line-height: 1.45;
+    font-size: 0.78rem;
+    max-width: 52ch;
+    margin-top: 0.4rem;
+    line-height: 1.5;
+  }
+}
+.right {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.gh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.68rem;
+  color: var(--ink2);
+  text-decoration: none;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  white-space: nowrap;
+  transition: 0.14s;
+
+  svg {
+    width: 12px;
+    height: 12px;
+    fill: currentColor;
+  }
+  &:hover {
+    color: var(--ink);
+    border-color: var(--ink3);
+  }
+  &:focus-visible {
+    outline: 1px solid var(--ink3);
+    outline-offset: 2px;
   }
 }
 .ctl {
@@ -306,27 +342,28 @@ body {
 
   b {
     display: block;
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: 2.55rem;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.01em;
     white-space: nowrap;
 
     u {
-      font-family: var(--sans);
+      font-family: var(--mono);
       font-weight: 400;
-      font-size: 0.85rem;
+      font-size: 0.62rem;
+      letter-spacing: 0;
       text-decoration: none;
-      color: var(--ink2);
-      margin-left: 0.1em;
+      color: var(--ink3);
+      margin-left: 0.28em;
     }
   }
   span {
     display: block;
-    margin-top: 0.4rem;
+    margin-top: 0.45rem;
     font-size: 0.6rem;
-    letter-spacing: 0.13em;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--ink3);
     line-height: 1.35;
@@ -334,7 +371,7 @@ body {
 }
 
 .t {
-  font-family: var(--sans);
+  font-family: var(--mono);
   font-size: 8px;
   fill: var(--ink3);
   letter-spacing: 0.06em;
@@ -393,20 +430,29 @@ ol {
     }
     u {
       text-decoration: none;
-      font-family: var(--serif);
-      font-size: 0.9rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
       color: var(--accent);
     }
   }
 }
 
 .note {
-  font-size: 0.7rem;
-  color: var(--ink3);
+  font-size: 0.72rem;
+  color: var(--ink2);
   line-height: 1.6;
 
   p {
     margin-bottom: 0.7rem;
+  }
+
+  /* the measured value inside a readout line */
+  b {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 0.74rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
   }
 }
 .cap2 {
@@ -425,7 +471,7 @@ ol {
   border-top: 1px solid var(--rule);
 
   .tile b {
-    font-size: 2.9rem;
+    font-size: 2.5rem;
   }
   .tile:last-child {
     text-align: right;
