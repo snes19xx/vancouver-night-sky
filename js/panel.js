@@ -5,7 +5,7 @@ import { onTheme } from "./theme.js";
 
 const VAN = [-123.1207, 49.2827];
 const $ = (id) => document.getElementById(id);
-const PAGES = ["Site", "Sky", "Objects"];
+const PAGES = ["Site", "Sky", "Objects", "Sites"];
 const rgb = (c) => `rgb(${c[0] | 0} ${c[1] | 0} ${c[2] | 0})`;
 const tOf = (S) => Math.max(0, Math.min(1, (22.0 - S) / (22.0 - 16.6)));
 const countOf = (N) => Math.round(7.5 * Math.pow(3.1, N - 1));
@@ -279,16 +279,40 @@ function render() {
       <div id="ladderHost" style="flex:1 1 auto;min-height:0;padding-top:.35rem"></div>
       <div class="legend"><s>visible</s><s class="o">invisible</s><s class="h">deep-sky</s></div>
     </div>
+  </section>
+
+  <section class="pg">
+    <div class="hd">
+      <b>Darkest sites</b>
+      <span>${data.spots.length}</span>
+      <button class="x" id="close-sites" aria-label="Close">×</button>
+    </div>
+    <ol>${data.spots.map((s, i) => `<li data-i="${i}">
+      <i>${String(i + 1).padStart(2, "0")}</i>
+      <span><b>${s.name}</b><em>${s.dist_km} km · limit ${s.nelm.toFixed(2)}</em></span>
+      <u>B${s.bortle}</u></li>`).join("")}</ol>
+  </section>
+
   </section>`;
 
   last = { S, N, ratio: r, pure };
   panel.hidden = false;
   wrap.classList.add("split");
   page = 0;
+  pages.scrollTop = 0;
   syncPager();
   $("close-panel").onclick = close;
   $("close-sky").onclick = close;
   $("close-obj").onclick = close;
+  $("close-sites").onclick = close;
+  document.querySelectorAll("ol li").forEach((li) => {
+    li.onclick = () => {
+      const s = data.spots[+li.dataset.i];
+      scene.sel = { lon: s.lon, lat: s.lat };
+      render();
+      scene.flyTo(s.lon, s.lat);
+    };
+  });
   scene.resize();
   requestAnimationFrame(fit);
 }

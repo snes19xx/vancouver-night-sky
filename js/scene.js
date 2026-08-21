@@ -96,6 +96,7 @@ export class Scene {
       sky: true,
       glow: false,
       roads: false,
+      stars: true,
       spots: true,
       cont: true,
       grid: true,
@@ -153,6 +154,28 @@ export class Scene {
         for (let i = 2; i < line.length; i += 2) p.lineTo(line[i], line[i + 1]);
       }
       this.roadPaths[tier] = p;
+    }
+
+    const lcg = (
+      (s) => () =>
+        (s = (s * 16807) % 2147483647) / 2147483647
+    )(7);
+    const { nx, ny, cell_m, scale, offset } = data.sky;
+    this._stars = [];
+    for (let k = 0; k < 7000; k++) {
+      const u = lcg();
+      const fx = lcg() * this.frame.width;
+      const fy = lcg() * this.frame.height;
+      const m = -1 + Math.log(1 + u * (Math.pow(3.1, 7.6) - 1)) / Math.log(3.1);
+      const col = Math.floor(fx / cell_m);
+      const row = Math.floor(fy / cell_m);
+      if (col < 0 || col >= nx || row < 0 || row >= ny) continue;
+      const S = offset + data.skyBin[row * nx + col] * scale;
+      const N = 7.93 - 5 * Math.log10(Math.pow(10, 4.316 - S / 5) + 1);
+      if (m > N) continue;
+      const br = Math.min(1, Math.pow(10, (1.8 - m) / 3.6));
+      const head = Math.min(1, (N - m) / 1.2);
+      this._stars.push({ fx, fy, br, head });
     }
 
     this._raf = 0;
@@ -220,7 +243,18 @@ export class Scene {
         [PADL + this.mw, PADT + this.mh],
       ]);
     select(this.cv).call(this.zoom.transform, this.t);
+    this.onResize?.();
     this.draw();
+  }
+
+  // Map frame in CSS pixels relative to the stage.
+  plotRect() {
+    return {
+      left: this.cv.offsetLeft + PADL,
+      top: this.cv.offsetTop + PADT,
+      width: this.mw,
+      height: this.mh,
+    };
   }
 
   // Frame metres, y already flipped down, to CSS pixels.
@@ -365,6 +399,19 @@ export class Scene {
     cx.rect(PADL, PADT, this.mw, this.mh);
     cx.clip();
 
+    if (this.show.stars) {
+      cx.fillStyle = dark ? "#f2efe8" : "#1b1d20";
+      for (const s of this._stars) {
+        const [x, y] = this.screen(s.fx, s.fy);
+        cx.globalAlpha =
+          (dark ? 0.14 : 0.1) + (dark ? 0.86 : 0.72) * s.br * s.head;
+        cx.beginPath();
+        cx.arc(x, y, 0.3 + 1.5 * s.br, 0, 6.284);
+        cx.fill();
+      }
+      cx.globalAlpha = 1;
+    }
+
     cx.font = SANS(9);
     cx.textBaseline = "middle";
     for (const place of this.places) {
@@ -425,6 +472,17 @@ export class Scene {
     cx.restore();
 
     this.margins(INK, INK2, INK3);
+  }
+
+  flyTo(lon, lat) {
+    const [fx, fy] = this.point(lon, lat);
+    const k = Math.max(8, this.t.k);
+    const tx = PADL + this.mw / 2 - k * (PADL + fx * this.s0);
+    const ty = PADT + this.mh / 2 - k * (PADT + fy * this.s0);
+    select(this.cv)
+      .transition()
+      .duration(600)
+      .call(this.zoom.transform, zoomIdentity.translate(tx, ty).scale(k));
   }
 
   // Half-degree meridians and parallels, as sampled polylines.

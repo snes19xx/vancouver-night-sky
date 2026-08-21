@@ -10,6 +10,9 @@
       href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400&family=Public+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
     <link rel="stylesheet" href="styles/main.css" />
     <script type="importmap">
       { "imports": { "d3": "https://cdn.jsdelivr.net/npm/d3@7/+esm" } }
@@ -26,34 +29,86 @@
         </p>
       </div>
       <div class="right">
-        <a
-          class="gh"
-          href="https://github.com/snes19xx/vancouver-night-sky"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-            <path
-              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
-            />
-          </svg>
-          View on GitHub
-        </a>
+        <div class="top-acts">
+          <button id="b-theme" aria-pressed="false">Light</button>
+          <a
+            class="gh"
+            href="https://github.com/snes19xx/vancouver-night-sky"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+              />
+            </svg>
+            View on GitHub
+          </a>
+        </div>
         <nav class="ctl">
           <button id="b-sky" aria-pressed="true">Brightness</button>
           <button id="b-glow" aria-pressed="false">Ground light</button>
           <button id="b-roads" aria-pressed="false">Streetlights</button>
+          <button id="b-stars" aria-pressed="true">Stars</button>
           <button id="b-spots" aria-pressed="true">Dark sites</button>
           <button id="b-cont" aria-pressed="true">Contours</button>
           <button id="b-grid" aria-pressed="true">Graticule</button>
           <span class="sep"></span>
-          <button id="b-theme" aria-pressed="false">Light</button>
+          <button id="b-method" aria-pressed="false">Method</button>
         </nav>
       </div>
     </header>
 
     <div class="wrap" id="wrap">
-      <div class="stage" id="stage"><canvas id="map"></canvas></div>
+      <div class="stage" id="stage">
+        <canvas id="map"></canvas>
+        <div id="method" class="method" hidden>
+          <h2>Method</h2>
+          <p class="method-sub">Modeled zenith sky brightness from Falchi et al.
+          (2016), derived from VIIRS/DNB radiances and resampled to a
+          269&thinsp;&times;&thinsp;191 grid at 1&thinsp;km in BC Albers
+          (EPSG:3005). Every per-cell statistic in the side panel follows from
+          \(S\) alone.</p>
+          <div class="method-grid">
+            <div class="mc">
+              <b>Sky surface brightness</b>
+              <div class="eq">\( S = \text{offset} + \text{raw} \times \text{scale} \quad [\text{mag\,arcsec}^{-2}] \)</div>
+              <p class="mc-note">\( \text{offset} = 16.546, \quad \text{scale} = 8.32 \times 10^{-5} \)</p>
+            </div>
+            <div class="mc">
+              <b>Naked-eye limiting magnitude</b>
+              <div class="eq">\( N = 7.93 - 5\log_{10}\left(10^{4.316 - S/5} + 1\right) \)</div>
+            </div>
+            <div class="mc">
+              <b>Light pollution ratio</b>
+              <div class="eq">\( \text{ratio} = \frac{L(S)}{L_{\text{nat}}} \qquad L(S) = L_0 \cdot 10^{-S/2.5} \)</div>
+            </div>
+            <div class="mc">
+              <b>Visible star count</b>
+              <div class="eq">\( \text{count} \approx \text{round}\left(7.5 \cdot 3.1^{N-1}\right) \)</div>
+            </div>
+            <div class="mc full">
+              <b>Bortle class</b>
+              <table class="bortle compact">
+                <tr><td>1</td><td>\( \ge 21.99 \)</td><td>Excellent dark</td>
+                    <td>4</td><td>\( \ge 20.49 \)</td><td>Rural/suburban</td>
+                    <td>7</td><td>\( \ge 18.38 \)</td><td>Suburban/urban</td></tr>
+                <tr><td>2</td><td>\( \ge 21.89 \)</td><td>Truly dark</td>
+                    <td>5</td><td>\( \ge 19.50 \)</td><td>Suburban</td>
+                    <td>8</td><td>\( \ge 17.80 \)</td><td>City</td></tr>
+                <tr><td>3</td><td>\( \ge 21.69 \)</td><td>Rural</td>
+                    <td>6</td><td>\( \ge 18.94 \)</td><td>Bright suburban</td>
+                    <td>9</td><td>\( < 17.80 \)</td><td>Inner-city</td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="method-refs">
+            <b>References</b>
+            <div class="ref-item">Bortle, J.E. (2001) &lsquo;Introducing the Bortle Dark-Sky Scale&rsquo;, <i>Sky &amp; Telescope</i>, 101(2), pp. 126&ndash;129.</div>
+            <div class="ref-item">Falchi, F., Cinzano, P., Duriscoe, D., Kyba, C.C.M., Elvidge, C.D., Baugh, K., Portnov, B.A., Rybnikova, N.A. and Furgoni, R. (2016) &lsquo;The new world atlas of artificial night sky brightness&rsquo;, <i>Science Advances</i>, 2(6), e1600377. doi:10.1126/sciadv.1600377.</div>
+          </div>
+        </div>
+      </div>
       <aside class="panel" id="panel" hidden>
         <div class="pages" id="pages"></div>
         <div class="pager">
