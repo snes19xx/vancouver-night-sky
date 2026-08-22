@@ -102,11 +102,12 @@ export class Scene {
       grid: true,
     };
     this.sel = null;
+    this.roadsReady = false;
+    this.roadsError = false;
     this.t = zoomIdentity;
 
     const [w, s, e, n] = data.sky.frame;
     this.frame = { w, s, e, n, width: e - w, height: n - s };
-    this.roads = this.toFrame(data.roads);
     this.spots = data.spots.map((p) => ({
       ...p,
       xy: this.point(p.lon, p.lat),
@@ -147,14 +148,6 @@ export class Scene {
       return p;
     });
     this.roadPaths = {};
-    for (const [tier, lines] of Object.entries(this.roads)) {
-      const p = new Path2D();
-      for (const line of lines) {
-        p.moveTo(line[0], line[1]);
-        for (let i = 2; i < line.length; i += 2) p.lineTo(line[i], line[i + 1]);
-      }
-      this.roadPaths[tier] = p;
-    }
 
     const lcg = (
       (s) => () =>
@@ -198,20 +191,41 @@ export class Scene {
     return [x - this.frame.w, this.frame.n - y];
   }
 
-  toFrame(roads) {
-    const out = {};
-    for (const [tier, lines] of Object.entries(roads)) {
-      out[tier] = lines.map((line) => {
-        const flat = new Float32Array(line.length * 2);
-        line.forEach(([lon, lat], i) => {
-          const [x, y] = this.point(lon, lat);
-          flat[i * 2] = x;
-          flat[i * 2 + 1] = y;
-        });
-        return flat;
+  toFrame(lines) {
+    return lines.map((line) => {
+      const flat = new Float32Array(line.length * 2);
+      line.forEach(([lon, lat], i) => {
+        const [x, y] = this.point(lon, lat);
+        flat[i * 2] = x;
+        flat[i * 2 + 1] = y;
       });
+      return flat;
+    });
+  }
+
+  async loadRoads(base = "assets") {
+    try {
+      const res = await fetch(`${base}/roads.json`);
+      if (!res.ok) throw new Error(res.status);
+      const roads = await res.json();
+      for (const [tier] of TIERS) {
+        const lines = roads[tier];
+        if (!lines) continue;
+        await new Promise((r) => setTimeout(r));
+        const p = new Path2D();
+        for (const flat of this.toFrame(lines)) {
+          p.moveTo(flat[0], flat[1]);
+          for (let i = 2; i < flat.length; i += 2)
+            p.lineTo(flat[i], flat[i + 1]);
+        }
+        this.roadPaths[tier] = p;
+        if (this.show.roads) this.draw();
+      }
+    } catch {
+      this.roadsError = true;
     }
-    return out;
+    this.roadsReady = true;
+    this.onRoads?.();
   }
 
   resize() {
@@ -369,7 +383,7 @@ export class Scene {
       cx.lineCap = "round";
       cx.lineJoin = "round";
       for (const [tier, t, alpha, width, from] of TIERS) {
-        if (this.t.k < from) continue;
+        if (this.t.k < from || !this.roadPaths[tier]) continue;
         cx.strokeStyle = rgb(ramp(t));
         cx.globalAlpha = alpha;
         cx.lineWidth = width / k;

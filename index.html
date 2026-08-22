@@ -10,13 +10,26 @@
       href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400&family=Public+Sans:wght@400;500;600&family=Spline+Sans+Mono:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer fetchpriority="low" src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
     <link rel="stylesheet" href="styles/main.css" />
     <script type="importmap">
-      { "imports": { "d3": "https://cdn.jsdelivr.net/npm/d3@7/+esm" } }
+      { "imports": { "d3": "./js/vendor/d3.js" } }
     </script>
+    <link rel="modulepreload" href="js/main.js" />
+    <link rel="modulepreload" href="js/scene.js" />
+    <link rel="modulepreload" href="js/panel.js" />
+    <link rel="modulepreload" href="js/layers.js" />
+    <link rel="modulepreload" href="js/charts.js" />
+    <link rel="modulepreload" href="js/albers.js" />
+    <link rel="modulepreload" href="js/theme.js" />
+    <link rel="modulepreload" href="js/vendor/d3.js" />
   </head>
   <body>
     <header class="mast">
@@ -62,6 +75,9 @@
     <div class="wrap" id="wrap">
       <div class="stage" id="stage">
         <canvas id="map"></canvas>
+        <div id="roadsload" class="loading" hidden>
+          <span class="dot"></span><span id="roadsmsg"></span>
+        </div>
         <div id="method" class="method" hidden>
           <h2>Method</h2>
           <p class="method-sub">Modeled zenith sky brightness from Falchi et al.

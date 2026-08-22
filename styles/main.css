@@ -712,3 +712,55 @@ ol {
     color: var(--ink2);
   }
 }
+
+.loading {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transform: translateX(-50%);
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.3rem 0.6rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+
+  &[hidden] {
+    display: none;
+  }
+  .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.1s ease-in-out infinite;
+  }
+  &.failed {
+    color: var(--ink3);
+  }
+  &.failed .dot {
+    background: var(--ink3);
+    animation: none;
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.22;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loading .dot {
+    animation: none;
+  }
+}

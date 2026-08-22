@@ -14,6 +14,18 @@ function redraw() {
   scene.draw();
 }
 
+const roadsEl = $("roadsload");
+const roadsMsg = $("roadsmsg");
+
+function syncRoads() {
+  const busy = scene.show.roads && !scene.roadsReady;
+  const failed = scene.show.roads && scene.roadsError;
+  roadsEl.hidden = !busy && !failed;
+  roadsEl.classList.toggle("failed", failed);
+  if (busy) roadsMsg.textContent = "Loading streetlights";
+  if (failed) roadsMsg.textContent = "Streetlights unavailable";
+}
+
 function toggle(id, key) {
   const b = $(id);
   b.setAttribute("aria-pressed", String(scene.show[key]));
@@ -21,6 +33,7 @@ function toggle(id, key) {
     scene.show[key] = !scene.show[key];
     b.setAttribute("aria-pressed", String(scene.show[key]));
     scene.draw();
+    syncRoads();
   };
 }
 
@@ -45,6 +58,8 @@ function placeMethod() {
   methodEl.style.top = `${r.top}px`;
   methodEl.style.width = `${r.width}px`;
   methodEl.style.height = `${r.height}px`;
+  roadsEl.style.left = `${r.left + r.width / 2}px`;
+  roadsEl.style.top = `${r.top + 12}px`;
 }
 
 scene.onResize = placeMethod;
@@ -86,3 +101,5 @@ window.addEventListener("load", renderMath);
 restore();
 scene.resize();
 renderMath();
+scene.onRoads = syncRoads;
+requestAnimationFrame(() => scene.loadRoads());

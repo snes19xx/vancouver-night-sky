@@ -77,24 +77,29 @@ class Raster {
 }
 
 export async function load(base = "assets") {
-  const layers = await (await fetch(`${base}/layers.json`)).json();
-  const sky = await (await fetch(`${base}/sky.json`)).json();
-  const [skyPx, glowPx] = await Promise.all([
-    readPng(`${base}/${layers.sky.file}`, layers.sky.nx, layers.sky.ny),
-    readPng(`${base}/${layers.glow.file}`, layers.glow.nx, layers.glow.ny),
-  ]);
-  const [roads, spots, basemap, skyBuf, objects] = await Promise.all([
-    (await fetch(`${base}/roads.json`)).json(),
-    (await fetch(`${base}/spots.json`)).json(),
-    (await fetch(`${base}/basemap.json`)).json(),
-    (await fetch(`${base}/sky.bin`)).arrayBuffer(),
-    (await fetch(`${base}/objects.json`)).json(),
-  ]);
+  const get = (file) => fetch(`${base}/${file}`);
+  const layersRes = get("layers.json");
+  const skyRes = get("sky.json");
+  const spotsRes = get("spots.json");
+  const basemapRes = get("basemap.json");
+  const skyBinRes = get("sky.bin");
+  const objectsRes = get("objects.json");
+
+  const layers = await (await layersRes).json();
+  const [sky, spots, basemap, skyBuf, objects, skyPx, glowPx] =
+    await Promise.all([
+      (await skyRes).json(),
+      (await spotsRes).json(),
+      (await basemapRes).json(),
+      (await skyBinRes).arrayBuffer(),
+      (await objectsRes).json(),
+      readPng(`${base}/${layers.sky.file}`, layers.sky.nx, layers.sky.ny),
+      readPng(`${base}/${layers.glow.file}`, layers.glow.nx, layers.glow.ny),
+    ]);
   return {
     sky,
     skyBin: new Uint16Array(skyBuf),
     objects,
-    roads,
     spots,
     basemap,
     rasters: {
