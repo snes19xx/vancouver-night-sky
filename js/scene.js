@@ -94,10 +94,10 @@ export class Scene {
     this.data = data;
     this.show = {
       sky: true,
-      glow: false,
+      glow: true,
       roads: false,
-      stars: true,
-      spots: true,
+      stars: false,
+      spots: false,
       cont: true,
       grid: true,
     };
